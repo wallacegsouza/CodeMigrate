@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<project default="compile" basedir="." name="CodeMigrate"> 
+  <property name="src.dir" value="src" />
+  <property name="bin.dir" value="bin" />
+  <property name="tst.dir" value="test" />
+
+  <path id="classpath.base">
+    <pathelement  location="${bin.dir}"/>
+  </path>
+
+  <path id="classpath.test">
+    <pathelement location="${basedir}/lib/junit-4.8.1.jar"/>
+    <pathelement location="${tst.dir}"/>
+    <path refid="classpath.base"/>
+  </path>
+
+  <target name="init">
+    <echo> Criando diretorio </echo>
+    <mkdir dir="${bin.dir}" />
+  </target>
+
+  <target name="compile" depends="init" description="Compila os arquivos-fonte">
+    <javac srcdir="${src.dir}" destdir="${bin.dir}">
+      <classpath refid="classpath.base" />
+    </javac>
+  </target>
+
+  <target name="compile-test" description="Compila e roda os testes">
+    <javac srcdir="${tst.dir}" verbose="true">
+      <classpath refid="classpath.test"/>
+    </javac>
+  </target>
+
+  <target name="test" depends="compile-test" description="Roda todos os testes">
+    <junit fork="true"
+        forkmode="once"
+        haltonfailure="false"
+        haltonerror="false"
+        includeantruntime="true"
+        showoutput="true"
+        printsummary="true">
+      <classpath refid="classpath.test"/>
+      <formatter type="brief" usefile="false" />
+      <test name="TiracentosTest.class" />
+    </junit>
+  </target>
+
+  <target name="clean">
+    <delete dir="${bin.dir}" />
+    <delete verbose="true">
+      <fileset dir="${tst.dir}" includes="**/*.class" />
+    </delete>
+  </target>
+
+</project>
+
