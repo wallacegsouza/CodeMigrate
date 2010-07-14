@@ -141,7 +141,7 @@ public class manageCode {
 	}
 
 	void rubyOnRailsCodeGenerator(Entidade... entitys){
-		
+		System.exec("ruby ../../../rails/template/template_app.rb");
 	}
 
 	void djangoCodeGenerator(Entidade... entitys){
