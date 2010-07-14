@@ -1,0 +1,147 @@
+package br.ucam.campos.dti.manager.model
+
+Aplicacao
+
+	String sigla
+	String nome
+	Set<Menu> menuCollection
+	Set<Aplicacaomantenedora> aplicacaomantenedoraCollection
+	Set<Aplicacaousuario> aplicacaousuarioCollection
+	@Many Tipousuario oidtipousuario
+
+Aplicacaomantenedora
+
+	@Many Aplicacao oidaplicacao
+	@Many Mantenedora oidmantenedora
+
+Aplicacaousuario
+
+	@Many Aplicacao oidaplicacao
+	@Many Usuario oidusuario
+
+Confirmacaousuario
+
+	String confirmado
+	String tipoconfirmacao
+	Date data
+	@Many Usuario oidusuario
+
+Grupo
+
+	String sigla
+	String nome
+	String descricao
+	Date datacriacao
+	@Many Tipousuario oidtipousuario
+	Set<Unidadegrupo> unidadegrupoCollection
+
+Log
+
+	String hora
+	String operacao
+	String usuario
+	String tabela
+	String data
+	String observacao
+	String oidregistro
+
+Mantenedora
+
+	String cnpj
+	String sigla
+	String razaosocial
+	String responsavel
+	String cpfresponsavel
+	String homepage
+	Set<Unidade> unidadeCollection
+	Set<Aplicacaomantenedora> aplicacaomantenedoraCollection
+
+Menu
+
+	String legenda
+	String link
+	String nome
+	@Many Aplicacao oidaplicacao
+	@Many Menu menu
+	Set<Menu> menuCollection
+	Set<Unidadeusuariomenu> unidadeusuariomenuCollection
+	Set<Unidadegrupomenu> unidadegrupomenuCollection
+
+Setor
+
+	String nome
+	@Many Grupo oidgrupo
+	Set<Setornivelresponsabilidade> setornivelresponsabilidadeCollection
+
+Tipousuario
+
+	String descricao
+	String tipo
+	Set<Grupo> grupoCollection
+	Set<Aplicacao> aplicacaoCollection
+
+Unidade
+
+	String cnpj
+	String sigla
+	String razaosocial
+	String responsavel
+	String cpfresponsavel
+	Set<Sala> salaCollection
+	@Many Mantenedora oidmantenedora
+	Set<Unidadeusuario> unidadeusuarioCollection
+	Set<Unidadegrupo> unidadegrupoCollection
+	Set<Unidadecurso> unidadecursoCollection
+	Set<Papelpessoa> papelPessoaCollection
+
+Unidadegrupo
+
+	@Many Grupo oidgrupo
+	@Many Unidade oidunidade
+	Set<Unidadegrupomenu> unidadegrupomenuCollection
+	Set<Unidadegrupousuario> unidadegrupousuarioCollection
+
+Unidadegrupomenu
+
+	@Many Menu oidmenu
+	@Many Unidadegrupo oidunidadegrupo
+
+Unidadegrupousuario
+
+	String padrao
+	@Many Unidadegrupo oidunidadegrupo
+	@Many Usuario oidusuario
+
+Unidadeusuario
+
+	String padrao
+	@Many Unidade oidunidade
+	@Many Usuario oidusuario
+	Set<Unidadeusuariomenu> unidadeusuariomenuCollection
+
+Unidadeusuariomenu
+
+	@Many Menu oidmenu
+	@Many Unidadeusuario oidunidadeusuario
+
+Usuario
+
+	String login
+	String senha
+	String palavrachave
+	Date dataativacao
+	Date dataexpiracao
+	String bloqueado
+	Set<Usuarioacesso> usuarioacessoCollection
+	Set<Unidadeusuario> unidadeusuarioCollection
+	Set<Unidadegrupousuario> unidadegrupousuarioCollection
+	Set<Aplicacaousuario> aplicacaousuarioCollection
+	Set<Confirmacaousuario> confirmacaousuarioCollection
+	@One Pessoa fk_oidpessoa
+
+Usuarioacesso
+
+	String data
+	String hora
+	String iphost
+	@Many Usuario oidusuario

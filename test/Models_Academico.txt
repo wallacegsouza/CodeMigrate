@@ -1,0 +1,721 @@
+package br.ucam.campos.dti.academico.model
+
+Pessoa
+
+	String nome
+	String email
+	String sexo
+	String naturalidade
+	String pai
+	String mae
+	byte[] foto
+	Pessoa tutor
+	Date datanascimento
+	//@Many Estadocivil oidestadocivil
+	@One Nacionalidade oidnacionalidade
+	//@Many Raca oidraca
+	Set<Pessoaendereco> pessoaenderecoCollection
+	Set<Telefone> telefoneCollection
+	Set<Formaingressopessoa> formaingressopessoaCollection
+	Set<Papelpessoa> papelpessoaCollection
+	Set<Documentos> documentosCollection
+	Set<Requerimento> requerimentoCollection
+	Set<Participacao> participacaoCollection
+
+Aluno extends Pessoa
+
+	String obsercavao
+	String matricula
+	String turno
+	Set<Alunoatividade> alunoatividadeCollection
+	Set<Matricula> matriculaCollection	
+	Set<Alunoorientado> alunoorientadoCollection
+
+Alunoatividade
+
+	Integer cargahoraria
+	@Many Periodoletivo oidperiodoletivo
+	@Many Atividade oidatividade
+	@Many Aluno oidaluno
+
+Alunoorientado
+
+	@Many Aluno oidaluno
+	@Many Orientacao oidorientacao
+
+Area
+
+	String descricao
+	Set<Tipoarea> tipoareaCollection
+
+Atividade
+
+	String descricao
+	String estagio
+	String cargahoraria
+	Date dtinicio
+	Date dtfim
+	String turno
+	Set<Alunoatividade> alunoatividadeCollection
+	@Many Subgrupo oidsubgrupo
+	@Many Curso oidcurso
+
+Atividadecomplementares extends Atividadeprofessor
+
+	Long cargahoraria
+
+Atividadedidatica
+
+	String tipo
+	Integer cargahoraria
+	Integer numeroturma
+	@Many Curso oidcurso
+	@Many Disciplina oiddisciplina
+	@Many Professor oidprofessor
+
+Atividadeextra extends Atividadeprofessor
+
+	Set<Bibliografia> bibliografiaCollection
+	String tipo
+	String vinculacao
+
+Atividadeposgraduacao extends Atividadeprofessor
+
+	Long cargahoraria
+	String nomedisciplina
+	String orientacao
+
+Atividadeprofessor
+
+	String metas
+	String tipoatividade
+	String descricao
+	@Many Participantesatividade oidparticipantesatividade
+	@Many Professor oidprofessor
+
+Autorbibliografia
+
+	String nome
+	@Many Bibliografia oidbibliografia
+
+Bibliografia
+
+	Date datainicio
+	Date datafim
+	Date datapublicacao
+	String tipobibliografia
+	String subtipobibliografia
+	String descricao
+	Set<Autorbibliografia> autorbibliografiaCollection
+	@Many Atividadeextra oidatividadeextra
+
+Calendarioacademico
+
+	String descricao
+	Set<Prazoacademico> prazoacademicoCollection
+
+Certificadoreservista extends Documentos
+
+	Integer numero
+	String categoria
+	String orgaoexpeditor
+	Date dataemissao
+	@One Pessoa oidpessoa
+
+Coeficienterendimento
+
+	float cr
+	float ca
+	float tac
+	@Many Matricula oidmatricula
+
+Conteudoprogramatico
+
+	String descricao
+	@Many Programa oidprograma
+	Set<Itemconteudoprogramatico> itemconteudoprogramaticoCollection
+
+Contrato
+
+	Date data
+	String representantelegal
+	Integer etapa
+	@One Matricula oidmatricula
+	@Many Periodoletivo oidperiodoletivo
+	@Many Unidadecurso fk_oidunidadecurso
+
+Cpf extends Documentos
+
+	Long numero
+	Date dataemissao
+	@One Pessoa oidpessoa
+
+Curso
+
+	Integer codigoies
+	String nome
+	Integer duracaomaxima
+	Integer duracaominima
+	String regimeletivo
+	String sistemacurricular
+	@Many Especialidade oidespecialidade
+	@Many Tipocurso oidtipocurso
+	@Many Modalidade oidmodalidade
+	Set<Reconhecimento> reconhecimentoCollection
+	Set<Cursotipoarea> cursotipoareaCollection
+	Set<Unidadecurso> unidadecursoCollection
+	Set<Atividadedidatica> atividadedidaticaCollection
+	Set<Tempodocenciacurso> tempodocenciacursoCollection
+	Set<Atividade> atividadeCollection
+
+Cursotipoarea
+
+	Curso oidcurso
+	Tipoarea oidtipoarea
+
+Dataprova
+
+	Date data
+	String hora
+	@Many Disciplinaoferecida oiddisciplinaoferecida
+	@Many Tipoprova oidtipoprova
+
+Diasemana
+
+	String descricao
+
+Disciplina
+
+	String sigla
+	Integer credito
+	Integer cargahoraria
+	String descricao
+	Set<Programa> programaCollection
+	Set<Disciplinamatriz> disciplinamatrizCollection
+	Set<Disciplinaequivalente> disciplinaequivalenteCollection
+	Set<Atividadedidatica> atividadedidaticaCollection
+
+Disciplinaequivalente
+
+	@Many Disciplina oiddisciplina
+	@Many Disciplina oiddisciplinaesquivalente
+
+Disciplinamatriz
+
+	Integer periodo
+	@Many Disciplina oiddisciplinadamatriz
+	@Many Matrizcurricular oidmatriz
+	Set<Disciplinaoferecida> disciplinaoferecidaCollection
+	Set<Requisito> requisitoCollection
+	Set<Prerequisito> prerequisitoCollection2
+	Set<Isencao> isencaoCollection
+
+Disciplinaoferecida
+
+	String turno
+	String codigo
+	Integer quantidade
+	Integer fase
+	@Many Disciplinamatriz fk_oiddisciplinamatrizoferecida
+	@Many Periodoletivo oidperiodoletivo
+	Set<Dataprova> dataprovaCollection
+	Set<Horariodisciplinaoferecida> horariodisciplinaoferecidaCollection
+	Set<Matriculadisciplinaoferecida> matriculadisciplinaoferecidaCollection
+
+Disciplinaoferecidaaulasdadas
+
+	String mes
+	Integer totalaulas
+	@Many Disciplinaoferecida oiddisciplinaoferecida
+
+Documentoobrigatorio
+
+	@Many Papelpessoa oidpapelpessoa
+	@Many Tipodocumento oidtipodocumento
+
+Documentos
+
+	String descricao
+	@Many Tipodocumento oidtipodocumento
+	@Many Pessoa oidpessoa
+
+Endereco
+
+	Integer numero
+	String cidade
+	String uf
+	String cep
+	String logradouro
+	String bairro
+	String complemento
+	Set<Pessoaendereco> pessoaenderecoCollection
+
+Especialidade
+
+	String descricao
+	@Many Tipocurso oidtipocurso
+	Set<Curso> cursoCollection
+
+Estabelecimentoensino
+
+	String sigla
+	String descricao
+
+Estadocivil
+
+	String descricao
+	Set<Pessoa> pessoaCollection
+
+Formaingresso
+
+	String descricao
+	Set<Vagasformaingresso> vagasformaingressoCollection
+	Set<Formaingressopessoa> formaingressopessoaCollection
+
+Formaingressopessoa
+
+	String codigo
+	String situacao
+	@Many Formaingresso oidformaingresso
+	@Many Periodounidadecurso oidperiodounidadecurso
+	@Many Pessoa oidpessoa
+	@Many Sala oidsala
+
+Frequencia
+
+	Integer falta
+	String mes
+	@Many Matriculadisciplinaoferecida oidmatriculadisciplinaoferecida
+
+Funcionario
+
+	String matricula
+	Setornivelresponsabilidade fk_oidsetornivelresponsabilidade
+	Set<Analiseinterna> analiseinternaCollection
+
+Grupoatividade
+
+	String descricao
+	Integer limmaxcreditos
+	Integer chminimag
+	Integer porcentagem
+	Integer chminimageral
+	String sigla
+	Set<Subgrupo> subgrupoCollection
+
+Historicomatricula
+
+	String observacao
+	Date data
+	@Many Matricula oidmatricula
+	@Many Situacaomatricula oidsituacaomatricula
+
+Horario
+
+	String horainicial
+	String horafim
+	Integer diasemana
+
+Horariodisciplinaoferecida
+
+	Sala oidsala
+	@Many Disciplinaoferecida oiddisciplinaoferecida
+	@Many Horario oidhorario
+	@Many Professor oidprofessor
+
+Horassemanaistrabalhadas
+
+	Integer orientacaodidatica
+	Integer ies
+	Integer estagiosupervisionado
+	Integer trabalhoconclusao
+	Integer outrasatividade
+	Integer iniciacaocientifica
+	Integer monitoria
+	Integer orientacaoextencao
+	Integer outrasorientacao
+	Integer pesquisa
+	Integer atividadeextencao
+	Integer posgraduao
+	Integer praticasprofissionais
+	@Many Periodoletivo oidperiodoletivo
+	@Many Professor oidprofessor
+
+Identidade extends Documentos
+
+	Long numero
+	Date dataemissao
+	String orgaoemissor
+	@One Pessoa oidpessoa
+
+Instrumentoavaliacao
+
+	String descricao
+	Set<Programainstrumento> programainstrumentoCollection
+
+Isencao
+
+	Disciplinamatriz oiddisciplinamatriz
+	@Many Matricula oidmatricula
+
+Itemconteudoprogramatico
+
+	String descricao
+	@Many Conteudoprogramatico oidconteudoprogramatico
+
+Matricula
+
+	Date data
+	@Many Aluno oidaluno
+	@Many Unidadecurso fk_oidunidadecurso
+	@Many Matrizunidadecurso fk_oidmatrizunidadecurso
+	@Many Periodoletivo oidperiodoletivo
+	Set<Historicomatricula> historicomatriculaCollection
+	Set<Matriculadisciplinaoferecida> matriculadisciplinaoferecidaCollection
+	Set<Isencao> isencaoCollection
+	Set<Coeficienterendimento> coeficienterendimentoCollection
+
+Matriculadisciplinaoferecida
+
+	Integer ordemchegada
+	float media
+	Date data
+	@Many Disciplinaoferecida oiddisciplinaoferecida
+	@Many Matricula oidmatricula
+	Set<Notas> notasCollection
+	Set<Matriculadisciplinaoferecidasituacaodisciplina> matriculadisciplinaoferecidasituacaodisciplinaCollection
+	Set<Frequencia> frequenciaCollection
+
+Matriculadisciplinaoferecidasituacaodisciplina
+
+	Date data
+	@Many Matriculadisciplinaoferecida oidmatriculadisciplinaoferecida
+	@Many Situacaodisciplina oidsituacaodisciplina
+
+Matrizcurricular
+
+	Integer ano
+	Date datainicio
+	Date datatermino
+	Integer totalperiodo
+	String codigo
+	Boolean horariodisponivel
+	@One Curso oidcurso
+	Set<Disciplinamatriz> disciplinamatrizCollection
+	Set<Matrizsemanaletiva> matrizsemanaletivaCollection
+	Set<Matrizunidadecurso> matrizunidadecursoCollection
+
+Matrizsemanaletiva
+
+	@Many Matrizcurricular oidMatrizcurricular
+	@Many Semanaletiva oidSemanaletiva
+
+Matrizunidadecurso
+
+	String descricao
+	@Many Matrizcurricular oidmatriz
+	@Many Unidadecurso fk_oidunidadecurso
+	Set<Matricula> matriculaCollection
+
+Metodologia
+
+	String descricao
+	Set<Programametodologia> programametodologiaCollection
+
+Modalidade
+
+	String descricao
+	Set<Curso> cursoCollection
+
+Nacionalidade
+
+	String descricao
+
+Notas
+
+	float valor
+	@Many Tipoprova oidtipoprova
+	@Many Matriculadisciplinaoferecida oidmatriculadisciplinaoferecida
+
+Orientacao
+
+	Date datainicio
+	Date datafim
+	String tituloorientacao
+	String tipoorientacao
+	@Many Professor oidprofessor
+	Set<Alunoorientado> alunoorientadoCollection
+
+Papelpessoa
+
+	String dtype
+	@Many Pessoa oidpessoa
+	@Many Unidade oidunidade
+	Set<Documentoobrigatorio> documentoobrigatorioCollection
+
+Participacao
+
+	String nome
+	@Many Pessoa oidpessoa
+	@Many Participantesatividade oidparticipantesatividade
+
+Participantesatividade
+
+	String descricao
+	Set<Atividadeprofessor> atividadeprofessorCollection
+	Set<Participacao> participacaoCollection
+
+Periodoletivo
+
+	String ano
+	String semestre
+	Date datainicio
+	Date datafim
+	Set<Alunoatividade> alunoatividadeCollection
+	Set<Prazoacademico> prazoacademicoCollection
+	Set<Disciplinaoferecida> disciplinaoferecidaCollection
+	Set<Matricula> matriculaCollection
+	Set<Contrato> contratoCollection
+
+Periodoprocessoseletivo
+
+	String anoinicio
+	String seminicio
+	String anovestibular
+	String semvestibular
+	Set<Periodounidadecurso> periodounidadecursoCollection
+
+Periodounidadecurso
+
+	String turno
+	@Many Periodoprocessoseletivo oidperiodoprocessoseletivo
+	@Many Unidadecurso fk_oidunidadecurso
+	Set<Formaingressopessoa> formaingressopessoaCollection
+	Set<Vagasformaingresso> vagasformaingressoCollection
+
+Pesquisa
+
+	String linhapesquisa
+	String nome
+	String descricao
+	String identificacao
+	String anoinicio
+	String situacao
+	String fontefinanciamento
+	String area
+	@One Participantesatividade oidparticipantesatividade
+	@Many  Professor oidprofessor
+
+Pessoaendereco
+
+	String tipoendereco
+	@Many Endereco oidendereco
+	@Many Pessoa oidpessoa
+
+Prazoacademico
+
+	Date datainicio
+	Date datafim
+	@Many Calendarioacademico oidcalendarioacademico
+	@Many Periodoletivo oidperiodoletivo
+
+Predio
+
+	String sigla
+	String descricao
+	Set<Sala> salaCollection
+	@Many Unidade fk_oidunidade
+
+Prerequisito
+
+	@Many Disciplinamatriz oidisciplina
+	@Many Disciplinamatriz oiddisciplinarequisito
+
+Professor
+
+	String matricula
+	String agencia
+	String conta
+	String banco
+	String homepage
+	Date dataadmissao
+	String funcao
+	Integer tempomagisteriosuperior
+	Integer tempomagisteriomedio
+	Integer tempomagisteriofundamental
+	Integer tempoextraprofissional
+	Set<Atividadeprofessor> atividadeprofessorCollection
+	Set<Horassemanaistrabalhadas> horassemanaistrabalhadasCollection
+	Set<Atividadedidatica> atividadedidaticaCollection
+	Set<Titulacao> titulacaoCollection
+	Set<Tempodocenciacurso> tempodocenciacursoCollection
+	Set<Orientacao> orientacaoCollection
+
+Programa
+
+	String objetivo
+	String conteudo
+	String bibliografiabasica
+	String bibliografiacomplementar
+	String softwareapoio
+	@Many Disciplina oiddisciplina
+	Set<Programainstrumento> programainstrumentoCollection
+	Set<Programametodologia> programametodologiaCollection
+	Set<Conteudoprogramatico> conteudoprogramaticoCollection
+
+Programainstrumento
+
+	@Many Instrumentoavaliacao oidinstrumentoavaliacao
+	@Many Programa oidprograma
+
+Programametodologia
+
+	@Many Metodologia oidmetodologia
+	@Many Programa oidprograma
+
+Raca
+
+	String descricao
+
+Reconhecimento
+
+	String numerodocumento
+	Date datapublicacao
+	String numeroparecer
+	Date dataparecer
+	@Many Curso oidcurso
+
+Recurso
+
+	String descricao
+	Set<Salarecurso> salarecursoCollection
+
+Requisito
+
+	@Many Disciplinamatriz oidisciplina
+	@Many Disciplinamatriz oiddisciplinarequisito
+
+Sala
+
+	String nome
+	String comprimento
+	short capacidade
+	String largura
+	@Many Predio oidpredio
+	Set<Salarecurso> salarecursoCollection
+	Set<Formaingressopessoa> formaingressopessoaCollection
+
+Salarecurso
+
+	int quantidade
+	@Many Recurso oidrecurso
+	@Many Sala oidsala
+
+Semanaletiva
+
+	Date datainicial
+	Date datafim
+	Integer valor
+	Set<Matrizsemanaletiva> matrizsemanaletivaCollection
+
+Situacaodisciplina
+
+	String descricao
+	Set<Matriculadisciplinaoferecidasituacaodisciplina> matriculadisciplinaoferecidasituacaodisciplinaCollection
+
+Situacaomatricula
+
+	String descricao
+	Set<Historicomatricula> historicomatriculaCollection
+
+Subgrupo
+
+	String descricao
+	Set<Atividade> subgrupoCollection
+	@Many Grupoatividade oidgrupoatividade
+
+Telefone
+
+	String ddd
+	String numero
+	String tipotelefone
+	@Many Pessoa oidpessoa
+
+Tempodocenciacurso
+
+	Integer tempo
+	@Many Curso oidcurso
+	@Many Professor oidprofessor
+
+Tipoarea
+
+	String descricao
+	@Many Area oidarea
+	Set<Cursotipoarea> cursotipoareaCollection
+
+Tipocurso
+
+	String descricao
+	Set<Especialidade> especialidadeCollection
+
+Tipodisciplina
+
+	String descricao
+
+Tipodocumento
+
+	String descricao
+	Set<Documentoobrigatorio> documentoobrigatorioCollection
+	Set<Documentos> documentosCollection
+
+Tipoendereco
+
+	String descricao
+
+Tipopapel
+
+	String descricao
+
+Tipoprova
+
+	String descricao
+	Set<Dataprova> dataprovaCollection
+	Set<Notas> notasCollection
+
+Titulacao
+
+	@Many Tipocurso oidtipocurso
+	String curso
+	String instituicao
+	Date datainicio
+	Date datafim
+	String observacao
+	String orientador
+	String titulotrabalho
+	@Many Professor oidprofessor
+
+Titulo extends Documentos
+
+	String numeroinscricao
+	Integer zona
+	Integer secao
+	Date dataemissao
+	String municipio
+	String uf
+	@One Pessoa oidpessoa
+
+Unidadecurso
+
+	@Many Unidade oidunidade
+	Set<Matricula> matriculaCollection
+	Set<Matrizunidadecurso> matrizunidadecursoCollection
+	@Many Curso oidcurso
+	Set<Periodounidadecurso> periodounidadecursoCollection
+	Set<Contrato> contratoCollection
+
+Vagasformaingresso
+
+	Integer vaga
+	Integer vagaocupada
+	@Many Formaingresso oidformaingresso
+	@Many Periodounidadecurso oidperiodounidadecurso
