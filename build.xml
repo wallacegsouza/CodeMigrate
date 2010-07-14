@@ -24,6 +24,12 @@
     <javac srcdir="${src.dir}" destdir="${bin.dir}">
       <classpath refid="classpath.base" />
     </javac>
+    <jar destfile="codemigrate.jar"
+        basedir="${bin.dir}">
+        <manifest>
+            <attribute name="Main-Class" value="manageCode"/>
+        </manifest>
+    </jar>
   </target>
 
   <target name="compile-test" description="Compila e roda os testes">
