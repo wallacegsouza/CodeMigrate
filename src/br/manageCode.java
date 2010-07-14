@@ -140,7 +140,7 @@ public class manageCode {
 		
 	}
 
-	void robyOnRailsCodeGenerator(Entidade... entitys){
+	void rubyOnRailsCodeGenerator(Entidade... entitys){
 		
 	}
 
