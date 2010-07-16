@@ -1,6 +1,8 @@
-app_name = ask("What's name your application?")
+#require 'fileutils'
 
-run "rails #{app_name} -m ~/CodeMigrate/rails/template/template_app.rb"
+#app_name = ask("What's name your application?")
+
+#run "mv #{File.dirname(__FILE__)} #{app_name}"
 
 run "rm public/index"
 
