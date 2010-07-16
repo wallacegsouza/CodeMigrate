@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <project default="compile" basedir="." name="CodeMigrate"> 
   <property name="src.dir" value="src" />
@@ -10,13 +10,13 @@
   </path>
 
   <path id="classpath.test">
-    <pathelement location="${basedir}/lib/junit-4.8.1.jar"/>
+    <pathelement location="${basedir}/lib/junit.jar"/>
     <pathelement location="${tst.dir}"/>
     <path refid="classpath.base"/>
   </path>
 
   <target name="init">
-    <echo> Criando diretorio </echo>
+    <echo> Criando diretorio bin </echo>
     <mkdir dir="${bin.dir}" />
   </target>
 
@@ -24,25 +24,34 @@
     <javac srcdir="${src.dir}" destdir="${bin.dir}">
       <classpath refid="classpath.base" />
     </javac>
+    <jar destfile="codemigrate.jar"
+        basedir="${bin.dir}">
+        <manifest>
+            <attribute name="Main-Class" value="manageCode"/>
+        </manifest>
+    </jar>
   </target>
 
   <target name="compile-test" description="Compila e roda os testes">
     <javac srcdir="${tst.dir}" verbose="true">
       <classpath refid="classpath.test"/>
     </javac>
+    <echo> Classes de teste compiladas com sucesso</echo>
   </target>
 
   <target name="test" depends="compile-test" description="Roda todos os testes">
     <junit fork="true"
         forkmode="once"
-        haltonfailure="false"
-        haltonerror="false"
+        haltonfailure="yes"
+        haltonerror="yes"
         includeantruntime="true"
         showoutput="true"
         printsummary="true">
       <classpath refid="classpath.test"/>
-      <formatter type="brief" usefile="false" />
-      <test name="TiracentosTest.class" />
+      <formatter type="brief" usefile="false"/>
+      <batchtest>
+        <fileset dir="${tst.dir}" includes="**/*.java"/>
+      </batchtest>
     </junit>
   </target>
 

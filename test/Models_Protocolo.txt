@@ -1,0 +1,52 @@
+package br.ucam.campos.dti.protocolo.model
+
+Analiseinterna
+
+	String observacao
+	Date data
+	String estadoavaliacao
+	@Many Funcionario oidfuncionario
+	@One Analisenaturezarequerimento oidanalisenaturezarequerimento
+	Set<Analisenaturezarequerimento> requerimentointernoCollection
+
+Analisenaturezarequerimento
+
+	String estado
+	String descricao
+	@Many Requerimento oidrequerimento
+	@Many Naturezarequerimento fk_oidnaturezarequerimento
+	@Many Analiseinterna fk_oidrequerimentointerno
+	@One Analiseinterna oidanalisenaturezarequerimento
+
+Naturezarequerimento
+
+	String descricao
+	Integer nivel
+	String tipo
+	@Many Taxa oidtaxa
+	@Many Setor oidsetor
+	@Many Setornivelresponsabilidade oidsetornivelresponsabilidade
+	Set<Analisenaturezarequerimento> fk_analisenaturezarequerimentoCollection
+
+Requerimento
+
+	String numero
+	Date data
+	String esclarecimento
+	Set<Analisenaturezarequerimento> analisenaturezarequerimentoCollection
+	@Many Pessoa fk_oidpessoa
+
+Setornivelresponsabilidade
+
+	Integer valor
+	@Many Setor oidsetor
+	Set<Funcionario> funcionarioCollection
+	Set<Naturezarequerimento> naturezarequerimentoCollection
+	String descricao
+
+Taxa
+
+	Integer valor
+	Date datainicio
+	Date datafim
+	Set<Naturezarequerimento> naturezarequerimentoCollection
