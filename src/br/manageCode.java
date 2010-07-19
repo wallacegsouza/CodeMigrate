@@ -13,7 +13,7 @@ import java.util.List;
 
 public class manageCode {
 
-<<<<<<< HEAD
+
     HashMap<String,Entidade> mapEntidade = new HashMap<String, Entidade>();
     List<String> tipos = new ArrayList<String>();
 
