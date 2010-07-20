@@ -149,6 +149,17 @@ public class manageCode {
         
     }
 
+    public String removeSpaceTabEndLine(String line){
+        int end = line.length();
+        for(int i = line.length() - 1; i >=0 ; i--){
+             if ( (line.charAt(i) != " " ) && (line.charAt(i) != "	" ) ){
+                end = i;
+                break;
+             }
+        }
+        return line.substring(0, end);
+    }
+
     void builderModel(String url) throws MalformedURLException, IOException{
 
         File file = new File(url);
@@ -254,28 +265,12 @@ public class manageCode {
 
     }
 
-    public int entityNumber(){
+    int entityNumber(){
         return mapEntidade.values().size();
     }
 
     /*
-        Corpo Principal
-
-     no momento apenas o nome de um script sera o parameto.
-     Refactory/Funcionalidade:
-    - scripts .model com os modelos (ideia de modulos estilo python)
-    - parametros de configuração para geração de codigo (-springRoo, -rails, -django)
-    - identificar tag de comentario
-    - a ideia tbm e converter projetos de um tipo de tecnologia para outra 
-        no caso do rails escolher uma versao
-        parametros para converção de codigo (java->rails, rails->django)
-        path principal do projeto
-    - um arquivo para configuracao do projeto (config):
-        nome do projeto
-        configuracao para o db
-        configuracao do servidor
-        participantes
-        login/senha de admin
+        Main
     */
     public static void main(String[] args) throws MalformedURLException, IOException {
 
