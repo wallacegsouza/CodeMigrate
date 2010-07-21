@@ -39,7 +39,7 @@ public class manageCode {
         Classes Internas
     */
 
-    abstract class DomainOBJ{
+    abstract class DomainObj{
         public int hashCode() {
             return toString().hashCode();
         }
@@ -63,6 +63,10 @@ public class manageCode {
         }
     }
 
+    class  ProjectConfig extends DomainObj {
+        String name, basePath, database, dbUser, dbPassword;
+    }
+
     /**
      * @author wallaceant
      * @version 1.0.0
@@ -75,7 +79,7 @@ public class manageCode {
      * </pre>
      * 
      */
-    class Entidade extends DomainOBJ{
+    class Entidade extends DomainObj{
         String nome, superClass, pack_age;
         List<Relacionamento> relacionamentos;
         List<Atributo> atributos;
@@ -88,7 +92,7 @@ public class manageCode {
         }
     }
 
-    class Relacionamento extends DomainOBJ{
+    class Relacionamento extends DomainObj{
         String entity1, entity2, cardinalidade;
 
         Relacionamento(String... args){
@@ -98,7 +102,7 @@ public class manageCode {
         }
     }
 
-    class Atributo extends DomainOBJ{
+    class Atributo extends DomainObj{
         String nome, tipo, anotacao;
         //List<String> anotacoes;
 
@@ -137,16 +141,51 @@ public class manageCode {
         return new Relacionamento(entity1, entity2, "@OneToOne");
     }
 
+    // inicialmente vou gerar o script para o spingRoo
+    // com varias configuracoes padrao
+    // ainda nao esta sendo feito a verificacao das anotacoes
     void springRooCodeGenerator(Entidade... entitys){
-        
+        StringBuilder scriptRoo = new StringBuilder();
+        scriptRoo.append("project --topLevelPackage "+ config.basePath);
+        if ( (config.database != null) ) {}
+        scriptRoo.append(
+        "persistence setup --provider HIBERNATE " +
+        " --database HYPERSONIC_PERSISTENT");
+
+        // criando as entidades
+        for(Entidade e : entitys){
+             scriptRoo.append("entity --name ~."+e.pack_age+"."+e.nome +
+             " --testAutomatically");
+        }
+
+        // adicionando os atributos
+        // 100 as anotacoes
+        for(Entidade e : entitys){
+            for(Atributo a : e.atributos){
+                scriptRoo.append("field "+a.tipo.toLowerCase()+
+                "--class ~."+ e.pack_age +"."+ e.nome +" --fieldName "+ a.nome);
+            }
+            scriptRoo.append("\n");
+        }
+
+        // criar relacionamentos
+        // verificar o erro
+        for(Entidade e : entitys){
+            String eName = "~."+ e.pack_age +"."+ e.nome;
+            for(Relacionamento r : e.relacionamentos){
+                scriptRoo.append("field reference --class "+ eName
+                "--fieldName "+ r.entity2 +"."+ e.nome +" --fieldName "+ a.nome);
+            }
+            scriptRoo.append("\n");
+        }
+
     }
 
     void rubyOnRailsCodeGenerator(Entidade... entitys){
         System.exec("ruby ../../../rails/template/template_app.rb");
     }
 
-    void djangoCodeGenerator(Entidade... entitys){
-        
+    void djangoCodeGenerator(ProjectConfig config, Entidade... entitys){
     }
 
     public String removeSpaceTabEndLine(String line){
@@ -183,6 +222,8 @@ public class manageCode {
             @ = 64
         */
         while ((line = read.readLine()) != null){
+
+            line = removeSpaceTabEndLine(line);
 
             //se a linha não estiver vazia
             if (line.length() > 0){

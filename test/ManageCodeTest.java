@@ -11,16 +11,18 @@ import org.junit.After;
 public class  ManageCodeTest {
 
     String url = "Models_Academico.txt";
-    
+    manageCode mc;
+
     public ManageCodeTest(){
     }
 
     @Before
     public void create(){
+        mc = new manageCode();
     }
 
-    @Teste
-    public void verificar(){
+    @Test
+    public void test(){
     }
 
     @After
