@@ -13,6 +13,10 @@ import java.util.List;
 
 public class manageCode {
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     HashMap<String,Entidade> mapEntidade = new HashMap<String, Entidade>();
     List<String> tipos = new ArrayList<String>();
 
@@ -38,7 +42,7 @@ public class manageCode {
         Classes Internas
     */
 
-    abstract class DomainOBJ{
+    abstract class DomainObj{
         public int hashCode() {
             return toString().hashCode();
         }
@@ -62,6 +66,10 @@ public class manageCode {
         }
     }
 
+    class  ProjectConfig extends DomainObj {
+        String name, basePath, database, dbUser, dbPassword;
+    }
+
     /**
      * @author wallaceant
      * @version 1.0.0
@@ -74,7 +82,7 @@ public class manageCode {
      * </pre>
      * 
      */
-    class Entidade extends DomainOBJ{
+    class Entidade extends DomainObj{
         String nome, superClass, pack_age;
         List<Relacionamento> relacionamentos;
         List<Atributo> atributos;
@@ -87,7 +95,7 @@ public class manageCode {
         }
     }
 
-    class Relacionamento extends DomainOBJ{
+    class Relacionamento extends DomainObj{
         String entity1, entity2, cardinalidade;
 
         Relacionamento(String... args){
@@ -97,7 +105,7 @@ public class manageCode {
         }
     }
 
-    class Atributo extends DomainOBJ{
+    class Atributo extends DomainObj{
         String nome, tipo, anotacao;
         //List<String> anotacoes;
 
@@ -136,16 +144,62 @@ public class manageCode {
         return new Relacionamento(entity1, entity2, "@OneToOne");
     }
 
+    // inicialmente vou gerar o script para o spingRoo
+    // com varias configuracoes padrao
+    // ainda nao esta sendo feito a verificacao das anotacoes
     void springRooCodeGenerator(Entidade... entitys){
-        
+        StringBuilder scriptRoo = new StringBuilder();
+        scriptRoo.append("project --topLevelPackage "+ config.basePath);
+        if ( (config.database != null) ) {}
+        scriptRoo.append(
+        "persistence setup --provider HIBERNATE " +
+        " --database HYPERSONIC_PERSISTENT");
+
+        // criando as entidades
+        for(Entidade e : entitys){
+             scriptRoo.append("entity --name ~."+e.pack_age+"."+e.nome +
+             " --testAutomatically");
+        }
+
+        // adicionando os atributos
+        // 100 as anotacoes
+        for(Entidade e : entitys){
+            for(Atributo a : e.atributos){
+                scriptRoo.append("field "+a.tipo.toLowerCase()+
+                "--class ~."+ e.pack_age +"."+ e.nome +" --fieldName "+ a.nome);
+            }
+            scriptRoo.append("\n");
+        }
+
+        // criar relacionamentos
+        // verificar o erro
+        for(Entidade e : entitys){
+            String eName = "~."+ e.pack_age +"."+ e.nome;
+            for(Relacionamento r : e.relacionamentos){
+                scriptRoo.append("field reference --class "+ eName
+                "--fieldName "+ r.entity2 +"."+ e.nome +" --fieldName "+ a.nome);
+            }
+            scriptRoo.append("\n");
+        }
+
     }
 
     void rubyOnRailsCodeGenerator(Entidade... entitys){
         System.exec("ruby ../../../rails/template/template_app.rb");
     }
 
-    void djangoCodeGenerator(Entidade... entitys){
-        
+    void djangoCodeGenerator(ProjectConfig config, Entidade... entitys){
+    }
+
+    public String removeSpaceTabEndLine(String line){
+        int end = line.length();
+        for(int i = line.length() - 1; i >=0 ; i--){
+             if ( (line.charAt(i) != " " ) && (line.charAt(i) != "	" ) ){
+                end = i;
+                break;
+             }
+        }
+        return line.substring(0, end);
     }
 
     void builderModel(String url) throws MalformedURLException, IOException{
@@ -171,6 +225,8 @@ public class manageCode {
             @ = 64
         */
         while ((line = read.readLine()) != null){
+
+            line = removeSpaceTabEndLine(line);
 
             //se a linha não estiver vazia
             if (line.length() > 0){
@@ -253,28 +309,12 @@ public class manageCode {
 
     }
 
-    public int entityNumber(){
+    int entityNumber(){
         return mapEntidade.values().size();
     }
 
     /*
-        Corpo Principal
-
-     no momento apenas o nome de um script sera o parameto.
-     Refactory/Funcionalidade:
-    - scripts .model com os modelos (ideia de modulos estilo python)
-    - parametros de configuração para geração de codigo (-springRoo, -rails, -django)
-    - identificar tag de comentario
-    - a ideia tbm e converter projetos de um tipo de tecnologia para outra 
-        no caso do rails escolher uma versao
-        parametros para converção de codigo (java->rails, rails->django)
-        path principal do projeto
-    - um arquivo para configuracao do projeto (config):
-        nome do projeto
-        configuracao para o db
-        configuracao do servidor
-        participantes
-        login/senha de admin
+        Main
     */
     public static void main(String[] args) throws MalformedURLException, IOException {
 
