@@ -316,7 +316,7 @@ public class manageCode {
     public static void main(String[] args) throws MalformedURLException, IOException {
 
         manageCode mc = new manageCode();
-        System.out.println("args.length = "+ args.length);
+        //System.out.println("args.length = "+ args.length);
 
         if(args.length > 0){
             for (int i = 0; i < args.length; i++) mc.builderModel(args[i]);
